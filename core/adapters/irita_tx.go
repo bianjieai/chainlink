@@ -1,8 +1,8 @@
 package adapters
 
 import (
-	"github.com/bianjieai/irita-sdk-go/modules/service"
-	"github.com/bianjieai/irita-sdk-go/types"
+	"github.com/irisnet/service-sdk-go/service"
+	"github.com/irisnet/service-sdk-go/types"
 
 	"github.com/smartcontractkit/chainlink/core/logger"
 	"github.com/smartcontractkit/chainlink/core/services/irita"
@@ -34,8 +34,8 @@ func (itx *IritaTx) Perform(input models.RunInput, store *strpkg.Store) models.R
 
 	provider, _ := types.AccAddressFromBech32(serviceRequset.Provider)
 
-	msgs := []types.Msg{service.MsgRespondService{
-		RequestID: types.MustHexBytesFrom(serviceRequset.RequestResponse.ID),
+	msgs := []types.Msg{&service.MsgRespondService{
+		RequestId: types.MustHexBytesFrom(serviceRequset.RequestResponse.ID),
 		Provider:  provider,
 		Output:    input.Result().String(),
 		Result:    `{"code":200,"message":""}`,

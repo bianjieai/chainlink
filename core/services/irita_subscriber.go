@@ -8,9 +8,9 @@ import (
 
 	"github.com/pkg/errors"
 
-	sdk "github.com/bianjieai/irita-sdk-go"
-	"github.com/bianjieai/irita-sdk-go/modules/service"
-	"github.com/bianjieai/irita-sdk-go/types"
+	iservicesdk "github.com/irisnet/service-sdk-go"
+	iservice "github.com/irisnet/service-sdk-go/service"
+	"github.com/irisnet/service-sdk-go/types"
 
 	"github.com/smartcontractkit/chainlink/core/logger"
 	"github.com/smartcontractkit/chainlink/core/store"
@@ -26,7 +26,7 @@ type IritaServiceTracker struct {
 }
 
 func NewIritaServiceTracker(
-	client sdk.IRITAClient,
+	client iservicesdk.ServiceClient,
 	store *store.Store,
 	runManager RunManager,
 ) *IritaServiceTracker {
@@ -92,7 +92,7 @@ func (ist *IritaServiceTracker) RemoveJob(ID *models.ID) error {
 }
 
 type Service struct {
-	Client           sdk.IRITAClient
+	Client           iservicesdk.ServiceClient
 	Store            *store.Store
 	RunManager       RunManager
 	jobSubscriptions map[string]types.Subscription
@@ -152,7 +152,7 @@ func (s *Service) Subscribe(initiator models.Initiator, job models.JobSpec) {
 		),
 	)
 
-	ch := make(chan service.QueryServiceRequestResponse)
+	ch := make(chan iservice.QueryServiceRequestResponse)
 
 	providerAcc, _ := types.AccAddressFromBech32(initiator.IritaServiceProvider)
 
@@ -207,27 +207,44 @@ func (s *Service) Subscribe(initiator models.Initiator, job models.JobSpec) {
 }
 
 func (s *Service) GetServiceResquest(
-	events types.Events,
+	events types.StringEvents,
 	serviceName string,
 	provider types.AccAddress,
-) []service.QueryServiceRequestResponse {
-	var ids []string
-	for _, e := range events.Filter("new_batch_request_provider") {
-		svcName := e.Attributes.GetValue("service_name")
-		prov := e.Attributes.GetValue("provider")
-		if svcName == serviceName && prov == provider.String() {
-			reqIDsStr := e.Attributes.GetValue("requests")
-			var idsTemp []string
-			_ = json.Unmarshal([]byte(reqIDsStr), &idsTemp)
-			ids = append(ids, idsTemp...)
-		}
+) []iservice.QueryServiceRequestResponse {
+	providerAddr, err := events.GetValue("new_batch_request_provider", "provder")
+	if err != nil {
+		return nil
 	}
 
-	var requests []service.QueryServiceRequestResponse
+	if providerAddr != provider.String() {
+		return nil
+	}
+
+	svcName, err := events.GetValue("new_batch_request_provider", "service_name")
+	if err != nil {
+		return nil
+	}
+
+	if svcName != serviceName {
+		return nil
+	}
+
+	var ids []string
+	reqIDsStr, err := events.GetValue("new_batch_request_provider", "requests")
+	if err != nil {
+		return nil
+	}
+
+	var idsTemp []string
+	_ = json.Unmarshal([]byte(reqIDsStr), &idsTemp)
+	ids = append(ids, idsTemp...)
+
+	var requests []iservice.QueryServiceRequestResponse
 
 	for _, reqID := range ids {
-		request, _ := s.Client.Service.QueryServiceRequest(reqID)
+		request, _ := s.Client.QueryServiceRequest(reqID)
 		requests = append(requests, request)
 	}
+
 	return requests
 }
