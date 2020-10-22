@@ -18,7 +18,7 @@
 
 - `params`
   - `serviceName`：要订阅的服务名
-  - `serviceProvider`：要订阅的服务提供方
+  - `serviceProvider`：要订阅的服务提供者地址
 
 ### Adapters
 
@@ -64,6 +64,7 @@ iritacli keys add provider \
 IRITA_URL=http://localhost:26657
 IRITA_GRPC_ADDR=localhost:9090
 IRITA_CHAIN_ID=irita-hub
+IRITA_TX_FEE=4point
 IRITA_KEY_DAO=~/.chainlink/.iritakeys
 IRITA_KEY_NAME=provider
 ```
