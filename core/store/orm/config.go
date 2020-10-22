@@ -529,6 +529,10 @@ func (c Config) IritaKeyDao() string {
 	return c.viper.GetString(EnvVarName("IritaKeyDao"))
 }
 
+func (c Config) IritaTxFee() string {
+	return c.viper.GetString(EnvVarName("IritaTxFee"))
+}
+
 func (c Config) IritaKeyName() string {
 	return c.viper.GetString(EnvVarName("IritaKeyName"))
 }

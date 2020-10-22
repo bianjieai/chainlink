@@ -22,9 +22,15 @@ func GetClient(config *orm.Config) iservicesdk.ServiceClient {
 }
 
 func newClient(config *orm.Config) iservicesdk.ServiceClient {
+	fee, err := types.ParseDecCoins(config.IritaTxFee())
+	if err != nil {
+		panic(err)
+	}
+
 	options := []types.Option{
 		types.KeyDAOOption(store.NewFileDAO(config.IritaKeyDao())),
 		types.TimeoutOption(10),
+		types.FeeOption(fee),
 	}
 
 	cfg, err := types.NewClientConfig(

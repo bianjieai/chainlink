@@ -136,20 +136,26 @@ func (s *Service) addSubscription(jobID *models.ID, sub types.Subscription) {
 }
 
 func (s *Service) Subscribe(initiator models.Initiator, job models.JobSpec) {
+	// builder := types.NewEventQueryBuilder().AddCondition(
+	// 	types.NewCond(
+	// 		"new_batch_request_provider",
+	// 		"provider",
+	// 	).EQ(
+	// 		types.EventValue(initiator.IritaServiceProvider),
+	// 	),
+	// ).AddCondition(
+	// 	types.NewCond(
+	// 		"new_batch_request",
+	// 		"service_name",
+	// 	).EQ(
+	// 		types.EventValue(initiator.IritaServiceName),
+	// 	),
+	// )
+
 	builder := types.NewEventQueryBuilder().AddCondition(
-		types.NewCond(
-			"new_batch_request_provider",
-			"provider",
-		).EQ(
-			types.EventValue(initiator.IritaServiceProvider),
-		),
+		types.NewCond("new_batch_request_provider", "service_name").EQ(types.EventValue(initiator.IritaServiceName)),
 	).AddCondition(
-		types.NewCond(
-			"new_batch_request",
-			"service_name",
-		).EQ(
-			types.EventValue(initiator.IritaServiceName),
-		),
+		types.NewCond("new_batch_request_provider", "provider").EQ(types.EventValue(initiator.IritaServiceProvider)),
 	)
 
 	ch := make(chan iservice.QueryServiceRequestResponse)
@@ -211,24 +217,6 @@ func (s *Service) GetServiceResquest(
 	serviceName string,
 	provider types.AccAddress,
 ) []iservice.QueryServiceRequestResponse {
-	providerAddr, err := events.GetValue("new_batch_request_provider", "provder")
-	if err != nil {
-		return nil
-	}
-
-	if providerAddr != provider.String() {
-		return nil
-	}
-
-	svcName, err := events.GetValue("new_batch_request_provider", "service_name")
-	if err != nil {
-		return nil
-	}
-
-	if svcName != serviceName {
-		return nil
-	}
-
 	var ids []string
 	reqIDsStr, err := events.GetValue("new_batch_request_provider", "requests")
 	if err != nil {
