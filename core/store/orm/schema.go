@@ -80,6 +80,7 @@ type ConfigSchema struct {
 	IritaURL      string `env:"IRITA_URL" default:"http://localhost:26657"`
 	IritaGRPCAddr string `env:"IRITA_GRPC_ADDR" default:"localhost:9090"`
 	IritaChainID  string `env:"IRITA_CHAIN_ID" default:"irita-hub"`
+	IritaTxFee    string `env:"IRITA_TX_FEE" default:"4point"`
 	IritaKeyDao   string `env:"IRITA_KEY_DAO" default:"~/.chainlink/.iritakeys"`
 	IritaKeyName  string `env:"IRITA_KEY_NAME" default:"provider"`
 }
