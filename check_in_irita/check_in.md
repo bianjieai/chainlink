@@ -14,11 +14,11 @@ Workflow
 
 **iritalog**
 
-Subscribe service request on IRITA Hub, start the job when a qualified request is monitored.
+Subscribe service request on IRITA Hub and start the job when a qualified request is monitored.
 
 - `params`
   - `serviceName`: service name to subscribe
-  - `serviceProvider`: service provider to subscribe
+  - `serviceProvider`: service provider address to subscribe
 
 ### Adapters
 
@@ -40,7 +40,7 @@ Parsing input data of oracle.
 **IritaTx**
 
 - `input`: output data of adapter `IritaServiceOutput`
-- `output`: result of respond execution
+- `output`: result of responding execution
 - `params`: none
 
 ## Workflow
@@ -62,7 +62,9 @@ Example:
 
 ```bash
 IRITA_URL=http://localhost:26657
+IRITA_GRPC_ADDR=localhost:9090
 IRITA_CHAIN_ID=irita-hub
+IRITA_TX_FEE=4point
 IRITA_KEY_DAO=~/.chainlink/.iritakeys
 IRITA_KEY_NAME=provider
 ```
