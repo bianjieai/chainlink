@@ -136,26 +136,20 @@ func (s *Service) addSubscription(jobID *models.ID, sub types.Subscription) {
 }
 
 func (s *Service) Subscribe(initiator models.Initiator, job models.JobSpec) {
-	// builder := types.NewEventQueryBuilder().AddCondition(
-	// 	types.NewCond(
-	// 		"new_batch_request_provider",
-	// 		"provider",
-	// 	).EQ(
-	// 		types.EventValue(initiator.IritaServiceProvider),
-	// 	),
-	// ).AddCondition(
-	// 	types.NewCond(
-	// 		"new_batch_request",
-	// 		"service_name",
-	// 	).EQ(
-	// 		types.EventValue(initiator.IritaServiceName),
-	// 	),
-	// )
-
 	builder := types.NewEventQueryBuilder().AddCondition(
-		types.NewCond("new_batch_request_provider", "service_name").EQ(types.EventValue(initiator.IritaServiceName)),
+		types.NewCond(
+			"new_batch_request_provider",
+			"service_name",
+		).EQ(
+			types.EventValue(initiator.IritaServiceName),
+		),
 	).AddCondition(
-		types.NewCond("new_batch_request_provider", "provider").EQ(types.EventValue(initiator.IritaServiceProvider)),
+		types.NewCond(
+			"new_batch_request_provider",
+			"provider",
+		).EQ(
+			types.EventValue(initiator.IritaServiceProvider),
+		),
 	)
 
 	ch := make(chan iservice.QueryServiceRequestResponse)
