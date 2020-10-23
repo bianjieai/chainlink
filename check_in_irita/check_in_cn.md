@@ -50,7 +50,7 @@
 示例
 
 ```bash
-iritacli keys add provider \
+irita keys add provider \
     --chain-id=irita-hub \
     --home=~/.chainlink/.iritakeys/ \
     --keyring-backend=file
@@ -74,7 +74,7 @@ IRITA_KEY_NAME=provider
 示例
 
 ```bash
-iritacli tx service define \
+irita tx service define \
     --name oracle \
     --description="this is a oracle service" \
     --author-description="oracle service provider" \
@@ -92,7 +92,7 @@ iritacli tx service define \
 示例
 
 ```bash
-iritacli tx service bind \
+irita tx service bind \
     --service-name=oracle \
     --deposit=20000point \
     --pricing='{"price":"1point"}' \
@@ -114,7 +114,7 @@ iritacli tx service bind \
 
 ```bash
 # 创建 oracle
-iritacli tx oracle create \
+irita tx oracle create \
     --feed-name="test-feed" \
     --description="test feed" \
     --latest-history=10 \
@@ -136,7 +136,7 @@ iritacli tx oracle create \
     -y
 
 # 启动 oracle
-iritacli tx oracle start test-feed \
+irita tx oracle start test-feed \
     --chain-id=irita-hub \
     --from=provider \
     --broadcast-mode block \
